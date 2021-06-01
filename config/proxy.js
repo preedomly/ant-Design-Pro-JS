@@ -15,6 +15,13 @@ export default {
         '^': '',
       },
     },
+    '/de1': {
+      target: 'https://dhstatic.bthome.com/dev',
+      changeOrigin: true,
+      pathRewrite: {
+        '^': '',
+      },
+    }
   },
   test: {
     '/api/': {

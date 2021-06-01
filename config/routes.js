@@ -1,3 +1,4 @@
+
 export default [
   {
     path: '/',
@@ -21,7 +22,7 @@ export default [
           {
             path: '/',
             component: '../layouts/BasicLayout',
-            authority: ['admin', 'user'],
+            authority: ['admin', 'user', 'menus'],
             routes: [
               {
                 path: '/',
@@ -52,8 +53,31 @@ export default [
               {
                 name: 'list.table-list',
                 icon: 'table',
-                path: '/list',
+                path: '/list',  
                 component: './TableList',
+              },
+              {
+                name: '定额管理',
+                icon: 'table',
+                path: '/quota',
+                routes: [
+                  {
+                    path: '/quota/material',
+                    name: '材料定额',
+                    icon: 'crown',
+                    component: './DemoTable',
+                    authority: ['admin'],
+                    cfg: 'query_material_admin',
+                  },
+                  {
+                    path: '/quota/rate',
+                    name: '费率项目',
+                    icon: 'crown',
+                    component: './DemoTable',
+                    authority: ['admin'],
+                    cfg: 'query_rate_admin',
+                  }
+                ]
               },
               {
                 component: './404',
@@ -70,4 +94,4 @@ export default [
   {
     component: './404',
   },
-];
+]

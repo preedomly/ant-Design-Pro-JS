@@ -67,16 +67,28 @@ const BasicLayout = (props) => {
     dispatch,
     children,
     settings,
+    menus,
     location = {
       pathname: '/',
     },
   } = props;
   const menuDataRef = useRef([]);
+
+
   useEffect(() => {
+    // setMenuData([]);
+    // setLoading(true);
     if (dispatch) {
       dispatch({
         type: 'user/fetchCurrent',
       });
+
+      // fetch('https://dhstatic.bthome.com/dev/web/consult/jsons.json')
+      //   .then(response => response.json())
+      //   .then(data => {
+      //     setMenuData(data || []);
+      //     setLoading(false);
+      //   });
     }
   }, []);
   /** Init variables */
@@ -97,15 +109,21 @@ const BasicLayout = (props) => {
       },
     [location.pathname],
   );
+
   return (
     <ProLayout
-      menu={{ locale: false }}
       logo={logo}
-      {...props}
-      {...settings}
+      // menu={{ loading }}
+      // style={{
+      //   height: '100vh',
+      //   border: '1px solid #ddd',
+      // }}
       collapsedButtonRender={false}
       onCollapse={handleMenuCollapse}
       onMenuHeaderClick={() => history.push('/')}
+      location={{
+        pathname: '/welcome/welcome',
+      }}
       menuItemRender={(menuItemProps, defaultDom) => {
         if (
           menuItemProps.isUrl ||
@@ -117,9 +135,9 @@ const BasicLayout = (props) => {
 
         return (
           <Link to={menuItemProps.path}>
-            {menuItemProps.pro_layout_parentKeys &&
+            {/* {menuItemProps.pro_layout_parentKeys &&
               menuItemProps.pro_layout_parentKeys.length > 0 &&
-              menuItemProps.icon}
+              menuItemProps.icon} */}
             {defaultDom}
           </Link>
         );
@@ -147,15 +165,18 @@ const BasicLayout = (props) => {
         return null;
       }}
       menuDataRender={menuDataRender}
-      rightContentRender={() => <RightContent />}
       postMenuData={(menuData) => {
         menuDataRef.current = menuData || [];
         return menuData || [];
       }}
+      // menuDataRender={() => menuData}
+      rightContentRender={() => <RightContent />}
       waterMarkProps={{
-        content: 'Ant Design Pro',
+        content: '卢月测试专列',
         fontColor: 'rgba(24,144,255,0.15)',
       }}
+      {...props}
+      {...settings}
     >
       <Authorized authority={authorized.authority} noMatch={noMatch}>
         {children}
@@ -164,7 +185,8 @@ const BasicLayout = (props) => {
   );
 };
 
-export default connect(({ global, settings }) => ({
+export default connect(({ global, settings, menus }) => ({
   collapsed: global.collapsed,
   settings,
+  menus,
 }))(BasicLayout);
