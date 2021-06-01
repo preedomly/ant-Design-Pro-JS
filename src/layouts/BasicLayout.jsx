@@ -5,13 +5,14 @@
  */
 import ProLayout, { DefaultFooter } from '@ant-design/pro-layout';
 import React, { useEffect, useMemo, useRef } from 'react';
-import { Link, useIntl, connect, history } from 'umi';
+import { Link, connect, history } from 'umi';
 import { GithubOutlined } from '@ant-design/icons';
 import { Result, Button } from 'antd';
 import Authorized from '@/utils/Authorized';
 import RightContent from '@/components/GlobalHeader/RightContent';
 import { getMatchMenu } from '@umijs/route-utils';
 import logo from '../assets/logo.svg';
+
 const noMatch = (
   <Result
     status={403}
@@ -96,13 +97,13 @@ const BasicLayout = (props) => {
       },
     [location.pathname],
   );
-  const { formatMessage } = useIntl();
   return (
     <ProLayout
+      menu={{ locale: false }}
       logo={logo}
-      formatMessage={formatMessage}
       {...props}
       {...settings}
+      collapsedButtonRender={false}
       onCollapse={handleMenuCollapse}
       onMenuHeaderClick={() => history.push('/')}
       menuItemRender={(menuItemProps, defaultDom) => {
@@ -114,14 +115,19 @@ const BasicLayout = (props) => {
           return defaultDom;
         }
 
-        return <Link to={menuItemProps.path}>{defaultDom}</Link>;
+        return (
+          <Link to={menuItemProps.path}>
+            {menuItemProps.pro_layout_parentKeys &&
+              menuItemProps.pro_layout_parentKeys.length > 0 &&
+              menuItemProps.icon}
+            {defaultDom}
+          </Link>
+        );
       }}
       breadcrumbRender={(routers = []) => [
         {
           path: '/',
-          breadcrumbName: formatMessage({
-            id: 'menu.home',
-          }),
+          breadcrumbName: '首页',
         },
         ...routers,
       ]}

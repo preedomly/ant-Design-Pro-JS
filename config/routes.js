@@ -35,15 +35,15 @@ export default [
               },
               {
                 path: '/admin',
-                name: 'admin',
+                name: '测试一级菜单',
                 icon: 'crown',
                 component: './Admin',
                 authority: ['admin'],
                 routes: [
                   {
                     path: '/admin/sub-page',
-                    name: 'sub-page',
-                    icon: 'smile',
+                    name: '测试二级菜单',
+                    icon: 'crown',
                     component: './Welcome',
                     authority: ['admin'],
                   },

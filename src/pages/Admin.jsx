@@ -2,22 +2,13 @@ import React from 'react';
 import { HeartTwoTone, SmileTwoTone } from '@ant-design/icons';
 import { Card, Typography, Alert } from 'antd';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
-import { useIntl } from 'umi';
+
 export default () => {
-  const intl = useIntl();
   return (
-    <PageHeaderWrapper
-      content={intl.formatMessage({
-        id: 'pages.admin.subPage.title',
-        defaultMessage: 'This page can only be viewed by admin',
-      })}
-    >
+    <PageHeaderWrapper content="这个页面只有 admin 权限才能查看">
       <Card>
         <Alert
-          message={intl.formatMessage({
-            id: 'pages.welcome.alertMessage',
-            defaultMessage: 'Faster and stronger heavy-duty components have been released.',
-          })}
+          message="umi ui 现已发布，欢迎使用 npm run ui 启动体验。"
           type="success"
           showIcon
           banner

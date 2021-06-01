@@ -1,10 +1,11 @@
-import { Tooltip, Tag } from 'antd';
-import { QuestionCircleOutlined } from '@ant-design/icons';
-import React from 'react';
-import { connect, SelectLang } from 'umi';
+import { Tooltip, Tag, Button } from 'antd';
+import { QuestionCircleOutlined, MenuUnfoldOutlined, MenuFoldOutlined } from '@ant-design/icons';
+import React, { useState } from 'react';
+import { connect } from 'umi';
 import Avatar from './AvatarDropdown';
 import HeaderSearch from '../HeaderSearch';
 import styles from './index.less';
+
 const ENVTagColor = {
   dev: 'orange',
   test: 'green',
@@ -12,15 +13,30 @@ const ENVTagColor = {
 };
 
 const GlobalHeaderRight = (props) => {
-  const { theme, layout } = props;
+  const { theme, layout, dispatch } = props;
+  const [collapsed, setcollapsed] = useState(false);
   let className = styles.right;
 
   if (theme === 'dark' && layout === 'top') {
     className = `${styles.right}  ${styles.dark}`;
   }
+  const handeCon = () => {
+    if (dispatch) {
+      dispatch({
+        type: 'global/changeLayoutCollapsed',
+        payload: !collapsed,
+      });
+    }
+    setcollapsed(!collapsed);
+  };
 
   return (
     <div className={className}>
+      <div className={styles.bns}>
+        <Button type="primary" onClick={handeCon} style={{ marginBottom: 16 }}>
+          {React.createElement(collapsed ? MenuUnfoldOutlined : MenuFoldOutlined)}
+        </Button>
+      </div>
       <HeaderSearch
         className={`${styles.action} ${styles.search}`}
         placeholder="Site Search"
@@ -65,12 +81,12 @@ const GlobalHeaderRight = (props) => {
           <Tag color={ENVTagColor[REACT_APP_ENV]}>{REACT_APP_ENV}</Tag>
         </span>
       )}
-      <SelectLang className={styles.action} />
     </div>
   );
 };
 
-export default connect(({ settings }) => ({
+export default connect(({ global, settings }) => ({
+  collapsed: global.collapsed,
   theme: settings.navTheme,
   layout: settings.layout,
 }))(GlobalHeaderRight);
