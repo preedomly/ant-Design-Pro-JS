@@ -1,7 +1,8 @@
-import React, { useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { connect } from 'umi';
 import { PageContainer } from '@ant-design/pro-layout';
-import { Table, Tag, Space, message } from 'antd';
+import { Table, Tag, Space } from 'antd';
+// import { panelCtrl } from '@/components/controls'
 
 const columns = [
     {
@@ -52,7 +53,7 @@ const columns = [
     },
 ];
 
-const data = [
+const datas = [
     {
         key: '1',
         name: 'John Brown',
@@ -75,25 +76,97 @@ const data = [
         tags: ['cool', 'teacher'],
     },
 ];
-
 const DemoTable = (props) => {
-    const { route: { cfg }, history } = props;
-    useEffect(() => {
-        // if (!cfg) {
-        //     return history.back()
-        // }
-        const cfgs = JSON.parse(localStorage.getItem('sysConfig')).filter(x => x.indexOf(cfg) > 0).join().substring(1);
-        try {
-            const sysConfigs = require(`@config${cfgs}`);
-            console.log(sysConfigs)
-        } catch (e) {
-            message.error('发现错误信息，请重新审查配置文件', 0);
+    // const { route: { cfg }, history } = props;
+    const [state, setstate] = useState({
+        top: {
+            condition: true,
+        },
+        center: [
+            [
+                {
+                    type: 'actionButton',
+                    value: [{ type: 'export', path: 'xxx/xxx' }],
+                    size: 5,
+                }
+            ],
+            [
+                {
+                    type: 'tree',
+                    path: '',
+                    size: 30,
+                }, {
+                    type: 'table',
+                    path: '',
+                    size: 67,
+                }
+            ],
+            {
+                type: 'ces',
+                value: [{ type: 'export', path: 'xxx/xxx' }],
+                size: 5,
+            }
+        ],
+        bottom: [],
+    });
+
+
+    const makeChildeDom = (data) => {
+        const ps = []
+        if (Array.isArray(data)) {
+            data.forEach(x => {
+                if (Array.isArray(x)) {
+                    ps.push(makeChildeDom(x))
+                } else {
+                    ps.push(<div key={x.type}>{x.type}</div>)
+                }
+            })
+            return ps;
         }
-    }, []);
+    }
+
+    const makeFather = (data, size = [100]) => {
+        const ps = [];
+        if (Array.isArray(data)) {
+            <div size={size}>
+                {
+                    data.map(p => {
+                        if (Array.isArray(p)) {
+                            ps.push(
+                                <div>
+                                    {makeFather(p, p.reduce((arr, cur) => { arr.push(cur.size); return arr }, []))}
+                                </div>
+                            )
+                        }
+                        ps.push(makeChildeDom(p))
+                    })
+                }
+            </div>
+            return ps;
+        }
+    }
+
+
+    // useEffect(() => {
+    //     const cfgs = JSON.parse(localStorage.getItem('sysConfig')).filter(x => x.indexOf(cfg) > 0).join().substring(1);
+    //     try {
+    //         const sysConfigs = require(`@/config${cfgs}`);
+    //         console.log('sysConfigs', sysConfigs)
+    //     } catch (e) {
+    //         message.error('发现错误信息，请重新审查配置文件', 0);
+    //     }
+    // }, []);
 
     return (
         <PageContainer>
-            <Table columns={columns} dataSource={data} />
+            {
+                state.top.condition && <div>123</div>
+            }
+            {
+                Array.isArray(state.center)
+                    ? makeFather(state.center)
+                    : <div>345</div>
+            }
         </PageContainer>
 
     )
